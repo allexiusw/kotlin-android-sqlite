@@ -1,15 +1,13 @@
 package com.tinyappco.databasedemo
 
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import java.util.*
 
-class DataManager(val context: Context) {
+class DataManager(context: Context) {
 
-    val db : SQLiteDatabase
+    private val db = context.openOrCreateDatabase("Assessment", Context.MODE_PRIVATE, null)
 
     init {
-        db = context.openOrCreateDatabase("Assessment", Context.MODE_PRIVATE, null)
         val moduleCreateQuery = "CREATE TABLE IF NOT EXISTS `Modules` ( `Code` TEXT NOT NULL, `Name` TEXT NOT NULL, PRIMARY KEY(`Code`) )"
         val componentCreateQuery = "CREATE TABLE IF NOT EXISTS `Components` ( `Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Title` TEXT NOT NULL, `Weight` INTEGER NOT NULL, `Deadline` INTEGER, `ModuleCode` TEXT )"
 
@@ -21,12 +19,12 @@ class DataManager(val context: Context) {
     //region create
     fun add(module: Module) : Boolean{
 
-        if (module(module.code) == null) {
+        return if (module(module.code) == null) {
             val query = "INSERT INTO modules (code, name) VALUES ('${module.code}', '${module.name}')"
             db.execSQL(query)
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 
@@ -55,25 +53,25 @@ class DataManager(val context: Context) {
             } while (cursor.moveToNext())
         }
         cursor.close()
-        return modules.sorted();
+        return modules.sorted()
     }
 
-    fun module(code: String) : Module? {
+    private fun module(code: String) : Module? {
         val query = "SELECT * FROM Modules WHERE Code='$code'"
         val cursor = db.rawQuery(query,null)
 
-        if (cursor.moveToFirst()) {
+        return if (cursor.moveToFirst()) {
             val name = cursor.getString(cursor.getColumnIndex("Code"))
             cursor.close()
-            return Module(code,name)
+            Module(code,name)
         } else {
             cursor.close()
-            return null;
+            null
         }
     }
 
     private fun components(query: String) : List<AssessmentComponent>{
-        var components = mutableListOf<AssessmentComponent>()
+        val components = mutableListOf<AssessmentComponent>()
 
         val cursor = db.rawQuery(query,null)
 
@@ -94,7 +92,7 @@ class DataManager(val context: Context) {
     }
 
 
-    fun componentsForModule(module: Module) : List<AssessmentComponent>{
+    private fun componentsForModule(module: Module) : List<AssessmentComponent>{
         val query = "SELECT * FROM Components WHERE ModuleCode='" + module.code + "'"
         return components(query)
     }
@@ -135,7 +133,7 @@ class DataManager(val context: Context) {
     fun delete(component: AssessmentComponent){
 
         if (component.id != null) {
-            val deletedId = db.delete("Components", "Id = ${component.id}", null)
+            db.delete("Components", "Id = ${component.id}", null)
         }
     }
 
@@ -151,5 +149,5 @@ class DataManager(val context: Context) {
 
     }
     //endregion
-    
+
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Edit Modules" android:id="@+id/menu_edit_modules"/>
+    <item android:title="@string/edit_modules" android:id="@+id/menu_edit_modules"/>
 </menu>

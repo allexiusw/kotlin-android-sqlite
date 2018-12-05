@@ -10,8 +10,7 @@ fun DatePicker.date() : Date{
     return cal.time
 }
 
-
 fun Date.shortDate() : String{
-    val formatter = SimpleDateFormat("dd/MM/yy")
+    val formatter = SimpleDateFormat("dd/MM/yy", Locale.UK)
     return formatter.format(this)
 }

@@ -1,6 +1,5 @@
 package com.tinyappco.databasedemo
 
-import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -11,21 +10,18 @@ import java.util.*
 
 class ComponentDetailsActivity : AppCompatActivity() {
 
-    lateinit var dataMgr : DataManager
-    lateinit var modules : List<Module>
+    private lateinit var dataMgr : DataManager
+    private lateinit var modules : List<Module>
 
-    var existingComponent : AssessmentComponent? = null
+    private var existingComponent : AssessmentComponent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_component_details)
 
-
         dataMgr = DataManager(this)
 
         refreshSpinner()
-
-        //pre-existing component?
 
         val component = intent.getSerializableExtra("component")
         if (component is AssessmentComponent){
@@ -38,18 +34,19 @@ class ComponentDetailsActivity : AppCompatActivity() {
 
             datePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), null)
 
-            btnAdd.text = "Update"
+            btnAdd.text = getString(R.string.update)
         }
 
     }
 
-    fun refreshSpinner(){
-        modules = dataMgr.allModules().sorted();
+    private fun refreshSpinner(){
+        modules = dataMgr.allModules()
         val adapter = ArrayAdapter<Module>(this,android.R.layout.simple_spinner_item, modules)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun addModule(v: View){
         val intent = Intent(this,ModuleDetailsActivity::class.java)
         startActivity(intent)
@@ -60,7 +57,7 @@ class ComponentDetailsActivity : AppCompatActivity() {
         refreshSpinner()
     }
 
-
+    @Suppress("UNUSED_PARAMETER")
     fun addComponent(v: View){
 
         val title = etTitle.text.toString()
@@ -83,6 +80,5 @@ class ComponentDetailsActivity : AppCompatActivity() {
         }
 
         finish()
-
     }
 }

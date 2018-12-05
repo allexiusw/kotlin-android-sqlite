@@ -10,12 +10,10 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_module_list.*
 
-
 class ModuleListActivity : AppCompatActivity() {
 
-
-    lateinit var modules : List<Module>
-    lateinit var dataManager: DataManager
+    private lateinit var modules : List<Module>
+    private lateinit var dataManager: DataManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +23,7 @@ class ModuleListActivity : AppCompatActivity() {
 
         refreshList()
 
-        listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
 
             val module = modules[position]
             val intent = Intent(this,ModuleDetailsActivity::class.java)
@@ -35,7 +33,6 @@ class ModuleListActivity : AppCompatActivity() {
 
         registerForContextMenu(listView)
     }
-
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
@@ -56,8 +53,7 @@ class ModuleListActivity : AppCompatActivity() {
         return super.onContextItemSelected(item)
     }
 
-
-    fun refreshList(){
+    private fun refreshList(){
         modules = dataManager.allModules()
         listView.adapter = ArrayAdapter<Module>(this,android.R.layout.simple_list_item_1,modules)
     }
