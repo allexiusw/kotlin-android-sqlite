@@ -20,24 +20,26 @@ class DataManager(val context: Context) {
         db.execSQL(moduleCreateQuery)
         db.execSQL(componentCreateQuery)
     }
-    
+
 
     //region create
-    fun add(module: Module){
+    fun add(module: Module) : Boolean{
 
         if (module(module.code) == null) {
             val query = "INSERT INTO modules (code, name) VALUES ('${module.code}', '${module.name}')"
             db.execSQL(query)
+            return true
+        } else {
+            return false
         }
     }
 
-    fun add(component: AssessmentComponent){
+    fun add(component: AssessmentComponent) {
 
-        val query = "INSERT INTO components (title, weight, deadline, moduleCode) " +
+        val query = "INSERT INTO Components (Title, Weight, Deadline, ModuleCode) " +
                 "VALUES ('${component.title}', '${component.weight}', ${component.deadline.time}, '${component.module.code}')"
         db.execSQL(query)
 
-        //val contentValues = ContentValues()
 
 
         //db.insert("components",null,contentValues)
@@ -51,17 +53,17 @@ class DataManager(val context: Context) {
 
         val modules = mutableListOf<Module>()
 
-        val cursor = db.rawQuery("SELECT * FROM modules", null)
+        val cursor = db.rawQuery("SELECT * FROM Modules", null)
         if (cursor.moveToFirst()) {
             do {
-                val code = cursor.getString(cursor.getColumnIndex("code"))
-                val name = cursor.getString(cursor.getColumnIndex("name"))
+                val code = cursor.getString(cursor.getColumnIndex("Code"))
+                val name = cursor.getString(cursor.getColumnIndex("Name"))
                 val module = Module(code,name)
                 modules.add(module)
             } while (cursor.moveToNext())
         }
         cursor.close()
-        return modules;
+        return modules.sorted();
     }
 
     fun module(code: String) : Module? {
@@ -78,26 +80,36 @@ class DataManager(val context: Context) {
         }
     }
 
-    fun componentsForModule(module: Module) : List<AssessmentComponent>{
-
+    private fun components(query: String) : List<AssessmentComponent>{
         var components = mutableListOf<AssessmentComponent>()
 
-        val query = "SELECT * FROM components WHERE modulecode='" + module.code + "'"
         val cursor = db.rawQuery(query,null)
 
         if (cursor.moveToFirst()) {
             do {
                 val id = cursor.getInt(cursor.getColumnIndex("Id"))
                 val title = cursor.getString(cursor.getColumnIndex("Title"))
+                val modCode =  cursor.getString(cursor.getColumnIndex("ModuleCode"))
                 val weight = cursor.getInt(cursor.getColumnIndex("Weight"))
                 val dateLong = cursor.getLong(cursor.getColumnIndex("Deadline"))
                 val date = Date(dateLong)
-                val component = AssessmentComponent(id, title, weight, date, module)
+                val component = AssessmentComponent(id, title, weight, date, module(modCode)!!)
                 components.add(component)
             } while (cursor.moveToNext())
         }
         cursor.close()
-        return components
+        return components.sorted()
+    }
+
+
+    fun componentsForModule(module: Module) : List<AssessmentComponent>{
+        val query = "SELECT * FROM Components WHERE ModuleCode='" + module.code + "'"
+        return components(query)
+    }
+
+    fun components() : List<AssessmentComponent>{
+        val query = "SELECT * FROM Components"
+        return components(query)
     }
 
     //endregion
