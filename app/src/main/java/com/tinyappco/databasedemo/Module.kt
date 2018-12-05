@@ -2,7 +2,7 @@ package com.tinyappco.databasedemo
 
 import java.io.Serializable
 
-class Module (val code: String, val name: String) : Comparable<Module>, Serializable {
+class Module (val code: String, var name: String) : Comparable<Module>, Serializable {
     override fun compareTo(other: Module): Int {
 
         return code.compareTo(other.code)

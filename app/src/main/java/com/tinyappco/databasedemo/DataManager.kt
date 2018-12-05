@@ -1,11 +1,7 @@
 package com.tinyappco.databasedemo
 
-import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteDatabase.openOrCreateDatabase
-import android.support.v4.view.KeyEventDispatcher
 import java.util.*
 
 class DataManager(val context: Context) {
@@ -14,8 +10,8 @@ class DataManager(val context: Context) {
 
     init {
         db = context.openOrCreateDatabase("Assessment", Context.MODE_PRIVATE, null)
-        val componentCreateQuery = "CREATE TABLE IF NOT EXISTS `Components` ( `Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Title` TEXT NOT NULL, `Weight` INTEGER NOT NULL, `Deadline` INTEGER, `ModuleCode` TEXT )"
         val moduleCreateQuery = "CREATE TABLE IF NOT EXISTS `Modules` ( `Code` TEXT NOT NULL, `Name` TEXT NOT NULL, PRIMARY KEY(`Code`) )"
+        val componentCreateQuery = "CREATE TABLE IF NOT EXISTS `Components` ( `Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Title` TEXT NOT NULL, `Weight` INTEGER NOT NULL, `Deadline` INTEGER, `ModuleCode` TEXT )"
 
         db.execSQL(moduleCreateQuery)
         db.execSQL(componentCreateQuery)
@@ -39,10 +35,6 @@ class DataManager(val context: Context) {
         val query = "INSERT INTO Components (Title, Weight, Deadline, ModuleCode) " +
                 "VALUES ('${component.title}', '${component.weight}', ${component.deadline.time}, '${component.module.code}')"
         db.execSQL(query)
-
-
-
-        //db.insert("components",null,contentValues)
     }
     //endregion
 
@@ -117,11 +109,24 @@ class DataManager(val context: Context) {
 
     //region update
     fun update(module:Module){
-        //db.update()
+
+        val query = """UPDATE Modules SET
+            Name = '${module.name}'
+            WHERE Code = '${module.code}'
+        """
+        db.execSQL(query)
     }
 
     fun update(component: AssessmentComponent){
 
+        val query = """UPDATE Components SET
+                Title = '${component.title}',
+                Weight = ${component.weight},
+                Deadline = ${component.deadline.time},
+                ModuleCode = '${component.module.code}'
+                WHERE Id = ${component.id}
+                """
+        db.execSQL(query)
     }
     //endregion
 
@@ -130,19 +135,21 @@ class DataManager(val context: Context) {
     fun delete(component: AssessmentComponent){
 
         if (component.id != null) {
-            val deletedId = db.delete("components", "id = ${component.id}", null)
-        }
-        else {
-            //todo: find component
+            val deletedId = db.delete("Components", "Id = ${component.id}", null)
         }
     }
 
     fun delete(module: Module){
 
         //check for components and delete these first
+        val moduleComponents = componentsForModule(module)
+        for (component in moduleComponents){
+            delete(component)
+        }
+
+        db.delete("Modules","Code = '${module.code}'", null)
+
     }
     //endregion
-
-
-
+    
 }

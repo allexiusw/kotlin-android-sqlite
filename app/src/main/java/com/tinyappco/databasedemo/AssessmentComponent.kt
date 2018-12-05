@@ -17,7 +17,7 @@ class AssessmentComponent(var id: Int?, var title:String, var weight: Int, var d
 
 
     override fun toString(): String {
-        return "${module.code}: $title, $weight%, $deadline"
+        return "${deadline.shortDate()} ${module.code}: $title ($weight%)"
     }
 
 

@@ -20,6 +20,8 @@
         </activity>
         <activity android:name=".ComponentDetailsActivity">
         </activity>
+        <activity android:name=".ModuleListActivity">
+        </activity>
     </application>
 
 </manifest>

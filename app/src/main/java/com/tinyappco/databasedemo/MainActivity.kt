@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.ContextMenu
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -29,6 +30,22 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_settings, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.menu_edit_modules){
+
+            val intent = Intent(this,ModuleListActivity::class.java)
+            startActivity(intent)
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
         menuInflater.inflate(R.menu.menu_list_context, menu)
@@ -38,13 +55,22 @@ class MainActivity : AppCompatActivity() {
     override fun onContextItemSelected(item: MenuItem?): Boolean {
 
         if (item?.itemId == R.id.menu_edit){
-            //todo: load component details activity with component
             val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
             val componentToEdit = dataSet[info.position]
 
             val intent = Intent(this,ComponentDetailsActivity::class.java)
             intent.putExtra("component",componentToEdit)
             startActivity(intent)
+
+            return true
+        }
+
+        if (item?.itemId == R.id.menu_delete){
+
+            val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
+            val component = dataSet[info.position]
+            dataManager.delete(component)
+            refreshComponents()
 
             return true
         }

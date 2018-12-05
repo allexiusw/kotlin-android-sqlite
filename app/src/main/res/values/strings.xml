@@ -7,4 +7,6 @@
     <string name="weight">Weight</string>
     <string name="new_module">New Module</string>
     <string name="add_component">Add Component</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>
