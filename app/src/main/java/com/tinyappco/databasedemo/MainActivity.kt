@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var dataManager: DataManager
-    private lateinit var dataSet : List<AssessmentComponent>
+    private lateinit var dataSet : List<Assignment>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,17 +35,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.menu_edit_modules){
-
             val intent = Intent(this,ModuleListActivity::class.java)
             startActivity(intent)
         }
-
         return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
-        menuInflater.inflate(R.menu.menu_list_context, menu)
+        menuInflater.inflate(R.menu.menu_deadlines_context, menu)
     }
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
@@ -54,8 +52,8 @@ class MainActivity : AppCompatActivity() {
             val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
             val componentToEdit = dataSet[info.position]
 
-            val intent = Intent(this,ComponentDetailsActivity::class.java)
-            intent.putExtra("component",componentToEdit)
+            val intent = Intent(this,AssignmentDetailsActivity::class.java)
+            intent.putExtra("assignment",componentToEdit)
             startActivity(intent)
 
             return true
@@ -75,8 +73,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshDeadlines(){
-        dataSet = dataManager.components()
-        listView.adapter = ArrayAdapter<AssessmentComponent>(this,android.R.layout.simple_list_item_1,dataSet)
+        dataSet = dataManager.assignments()
+        listView.adapter = ArrayAdapter<Assignment>(this,android.R.layout.simple_list_item_1,dataSet)
     }
 
     override fun onResume() {
@@ -85,8 +83,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Suppress("UNUSED_PARAMETER")
-    fun addComponent(v: View){
-        val intent = Intent(this, ComponentDetailsActivity::class.java)
+    fun addAssignment(v: View){
+        val intent = Intent(this, AssignmentDetailsActivity::class.java)
         startActivity(intent)
     }
 

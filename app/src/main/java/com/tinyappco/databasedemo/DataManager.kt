@@ -1,18 +1,19 @@
 package com.tinyappco.databasedemo
 
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import java.util.*
 
 class DataManager(context: Context) {
 
-    private val db = context.openOrCreateDatabase("Assessment", Context.MODE_PRIVATE, null)
+    private val db : SQLiteDatabase = context.openOrCreateDatabase("Assessment", Context.MODE_PRIVATE, null)
 
     init {
-        val moduleCreateQuery = "CREATE TABLE IF NOT EXISTS `Modules` ( `Code` TEXT NOT NULL, `Name` TEXT NOT NULL, PRIMARY KEY(`Code`) )"
-        val componentCreateQuery = "CREATE TABLE IF NOT EXISTS `Components` ( `Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Title` TEXT NOT NULL, `Weight` INTEGER NOT NULL, `Deadline` INTEGER, `ModuleCode` TEXT )"
+        val modulesCreateQuery = "CREATE TABLE IF NOT EXISTS `Modules` ( `Code` TEXT NOT NULL, `Name` TEXT NOT NULL, PRIMARY KEY(`Code`) )"
+        val assignmentsCreateQuery = "CREATE TABLE IF NOT EXISTS `Assignments` ( `Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `Title` TEXT NOT NULL, `Weight` INTEGER NOT NULL, `Deadline` INTEGER, `ModuleCode` TEXT )"
 
-        db.execSQL(moduleCreateQuery)
-        db.execSQL(componentCreateQuery)
+        db.execSQL(modulesCreateQuery)
+        db.execSQL(assignmentsCreateQuery)
     }
 
 
@@ -20,7 +21,7 @@ class DataManager(context: Context) {
     fun add(module: Module) : Boolean{
 
         return if (module(module.code) == null) {
-            val query = "INSERT INTO modules (code, name) VALUES ('${module.code}', '${module.name}')"
+            val query = "INSERT INTO Modules (code, name) VALUES ('${module.code}', '${module.name}')"
             db.execSQL(query)
             true
         } else {
@@ -28,16 +29,28 @@ class DataManager(context: Context) {
         }
     }
 
-    fun add(component: AssessmentComponent) {
+    fun add(assignment: Assignment) {
 
-        val query = "INSERT INTO Components (Title, Weight, Deadline, ModuleCode) " +
-                "VALUES ('${component.title}', '${component.weight}', ${component.deadline.time}, '${component.module.code}')"
+        val query = "INSERT INTO Assignments (Title, Weight, Deadline, ModuleCode) " +
+                "VALUES ('${assignment.title}', '${assignment.weight}', ${assignment.deadline.time}, '${assignment.module.code}')"
         db.execSQL(query)
     }
     //endregion
 
 
     //region retrieve
+
+    fun hasModules() : Boolean {
+        val cursor = db.rawQuery("SELECT * FROM Modules", null)
+        return if  (cursor.count > 0){
+            cursor.close()
+            true
+        } else {
+            cursor.close()
+            false
+        }
+    }
+
 
     fun allModules() : List<Module>{
 
@@ -70,10 +83,11 @@ class DataManager(context: Context) {
         }
     }
 
-    private fun components(query: String) : List<AssessmentComponent>{
-        val components = mutableListOf<AssessmentComponent>()
+    private fun assignments(query: String, args: Array<String>?) : List<Assignment>{
+        val assignments = mutableListOf<Assignment>()
 
-        val cursor = db.rawQuery(query,null)
+
+        val cursor = db.rawQuery(query,args)
 
         if (cursor.moveToFirst()) {
             do {
@@ -83,23 +97,23 @@ class DataManager(context: Context) {
                 val weight = cursor.getInt(cursor.getColumnIndex("Weight"))
                 val dateLong = cursor.getLong(cursor.getColumnIndex("Deadline"))
                 val date = Date(dateLong)
-                val component = AssessmentComponent(id, title, weight, date, module(modCode)!!)
-                components.add(component)
+                val assignment = Assignment(id, title, weight, date, module(modCode)!!)
+                assignments.add(assignment)
             } while (cursor.moveToNext())
         }
         cursor.close()
-        return components.sorted()
+        return assignments.sorted()
     }
 
 
-    private fun componentsForModule(module: Module) : List<AssessmentComponent>{
-        val query = "SELECT * FROM Components WHERE ModuleCode='" + module.code + "'"
-        return components(query)
+    private fun assignmentsForModule(module: Module) : List<Assignment>{
+        val query = "SELECT * FROM Assignments WHERE ModuleCode = ?"
+        return assignments(query, arrayOf(module.code))
     }
 
-    fun components() : List<AssessmentComponent>{
-        val query = "SELECT * FROM Components"
-        return components(query)
+    fun assignments() : List<Assignment>{
+        val query = "SELECT * FROM Assignments"
+        return assignments(query, null)
     }
 
     //endregion
@@ -115,14 +129,14 @@ class DataManager(context: Context) {
         db.execSQL(query)
     }
 
-    fun update(component: AssessmentComponent){
+    fun update(assignment: Assignment){
 
-        val query = """UPDATE Components SET
-                Title = '${component.title}',
-                Weight = ${component.weight},
-                Deadline = ${component.deadline.time},
-                ModuleCode = '${component.module.code}'
-                WHERE Id = ${component.id}
+        val query = """UPDATE Assignments SET
+                Title = '${assignment.title}',
+                Weight = ${assignment.weight},
+                Deadline = ${assignment.deadline.time},
+                ModuleCode = '${assignment.module.code}'
+                WHERE Id = ${assignment.id}
                 """
         db.execSQL(query)
     }
@@ -130,23 +144,23 @@ class DataManager(context: Context) {
 
 
     //region delete
-    fun delete(component: AssessmentComponent){
+    fun delete(assignment: Assignment){
 
-        if (component.id != null) {
-            db.delete("Components", "Id = ${component.id}", null)
+        if (assignment.id != null) {
+            val whereClause = "Id = ?"
+            val whereArgs = arrayOf(assignment.id.toString())
+            db.delete("Assignments", whereClause,whereArgs )
         }
     }
 
     fun delete(module: Module){
 
-        //check for components and delete these first
-        val moduleComponents = componentsForModule(module)
-        for (component in moduleComponents){
-            delete(component)
+        //check for assignments and delete these first
+        val moduleAssignments = assignmentsForModule(module)
+        for (assignment in moduleAssignments){
+            delete(assignment)
         }
-
-        db.delete("Modules","Code = '${module.code}'", null)
-
+        db.delete("Modules","Code = ?",arrayOf(module.code.toString()))
     }
     //endregion
 

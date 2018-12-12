@@ -10,7 +10,4 @@ class Module (val code: String, var name: String) : Comparable<Module>, Serializ
     override fun toString(): String {
         return "$code: $name"
     }
-
-
-
 }

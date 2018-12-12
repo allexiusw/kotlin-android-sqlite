@@ -18,7 +18,7 @@
         </activity>
         <activity android:name=".ModuleDetailsActivity">
         </activity>
-        <activity android:name=".ComponentDetailsActivity">
+        <activity android:name=".AssignmentDetailsActivity">
         </activity>
         <activity android:name=".ModuleListActivity">
         </activity>

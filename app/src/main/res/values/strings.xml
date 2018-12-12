@@ -13,4 +13,6 @@
     <string name="invalid_module_code">Module code should be two upper case letters followed by four numbers</string>
     <string name="update">Update</string>
     <string name="edit_modules">Edit Modules</string>
+    <string name="add_assignment">Add Assignment</string>
+    <string name="edit_assignment">Edit Assignment</string>
 </resources>

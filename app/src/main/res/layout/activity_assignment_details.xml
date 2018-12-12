@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ComponentDetailsActivity" tools:layout_editor_absoluteY="81dp">
+        tools:context=".AssignmentDetailsActivity" tools:layout_editor_absoluteY="81dp">
 
     <LinearLayout
             android:orientation="horizontal"
@@ -25,7 +25,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnAddModule" android:text="@string/new_module"
-                tools:layout_editor_absoluteY="16dp" tools:layout_editor_absoluteX="279dp"
                 android:layout_weight="1"
                 android:onClick="addModule"/>
     </LinearLayout>
@@ -37,10 +36,16 @@
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/etTitle"
-            android:hint="@string/title" app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp" app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            android:layout_marginBottom="16dp" app:layout_constraintBottom_toTopOf="@+id/etWeight"
+            android:hint="@string/title"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/etWeight"
             android:importantForAutofill="no"/>
     <EditText
             android:layout_width="346dp"
@@ -57,7 +62,8 @@
             android:layout_marginRight="8dp"
             app:layout_constraintTop_toBottomOf="@+id/etTitle"
             android:layout_marginBottom="13dp"
-            app:layout_constraintBottom_toTopOf="@+id/datePicker" android:importantForAutofill="no"/>
+            app:layout_constraintBottom_toTopOf="@+id/datePicker"
+            android:importantForAutofill="no"/>
 
     <DatePicker android:layout_width="384dp"
                 android:layout_height="wrap_content"
@@ -76,9 +82,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnAdd"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="9dp"
-            app:layout_constraintTop_toBottomOf="@+id/datePicker" app:layout_constraintEnd_toEndOf="parent"
-            android:onClick="addComponent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="9dp"
+            app:layout_constraintTop_toBottomOf="@+id/datePicker"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:onClick="addAssignment"/>
 
 
 </android.support.constraint.ConstraintLayout>

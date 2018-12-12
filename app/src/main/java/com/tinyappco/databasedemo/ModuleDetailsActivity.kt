@@ -23,6 +23,9 @@ class ModuleDetailsActivity : AppCompatActivity() {
             etCode.setText(module.code)
             etCode.isEnabled = false //cant change code as primary key - delete module instead
             button.text = getString(R.string.update)
+            title = "Edit ${module.code}"
+        } else {
+            title = "Add module"
         }
     }
 

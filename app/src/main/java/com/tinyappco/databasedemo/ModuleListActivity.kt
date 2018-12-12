@@ -34,6 +34,12 @@ class ModuleListActivity : AppCompatActivity() {
         registerForContextMenu(listView)
     }
 
+    private fun refreshList(){
+        modules = dataManager.allModules()
+        listView.adapter = ArrayAdapter<Module>(this,android.R.layout.simple_list_item_1,modules)
+    }
+
+
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
         menuInflater.inflate(R.menu.menu_modules_context,menu)
@@ -53,10 +59,7 @@ class ModuleListActivity : AppCompatActivity() {
         return super.onContextItemSelected(item)
     }
 
-    private fun refreshList(){
-        modules = dataManager.allModules()
-        listView.adapter = ArrayAdapter<Module>(this,android.R.layout.simple_list_item_1,modules)
-    }
+
 
     override fun onResume() {
         super.onResume()
