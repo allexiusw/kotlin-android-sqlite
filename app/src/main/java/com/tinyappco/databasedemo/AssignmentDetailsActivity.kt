@@ -31,8 +31,9 @@ class AssignmentDetailsActivity : AppCompatActivity() {
 
             val cal = Calendar.getInstance()
             cal.time = assignment.deadline
-
             datePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), null)
+
+            //todo: choose module in spinner
 
             btnAdd.text = getString(R.string.update)
             title = getString(R.string.edit_assignment)
