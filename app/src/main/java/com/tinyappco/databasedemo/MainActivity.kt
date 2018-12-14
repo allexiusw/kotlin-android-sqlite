@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
         refreshDeadlines()
 
         registerForContextMenu(listView)
+
+        title = getString(R.string.deadlines)
     }
 
 

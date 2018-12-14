@@ -21,7 +21,7 @@ class AssignmentDetailsActivity : AppCompatActivity() {
 
         dataMgr = DataManager(this)
 
-        refreshSpinner()
+
 
         val assignment = intent.getSerializableExtra("assignment")
         if (assignment is Assignment){
@@ -33,13 +33,13 @@ class AssignmentDetailsActivity : AppCompatActivity() {
             cal.time = assignment.deadline
             datePicker.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), null)
 
-            //todo: choose module in spinner
-
             btnAdd.text = getString(R.string.update)
             title = getString(R.string.edit_assignment)
         } else {
             title = getString(R.string.add_assignment)
         }
+
+        refreshSpinner()
 
     }
 
@@ -55,6 +55,11 @@ class AssignmentDetailsActivity : AppCompatActivity() {
         val adapter = ArrayAdapter<Module>(this,android.R.layout.simple_spinner_item, modules)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
+
+        val assignment = existingAssignment
+        if (assignment != null){
+            spinner.setSelection(adapter.getPosition(assignment.module))
+        }
     }
 
     @Suppress("UNUSED_PARAMETER")

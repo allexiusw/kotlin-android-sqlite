@@ -32,6 +32,8 @@ class ModuleListActivity : AppCompatActivity() {
         }
 
         registerForContextMenu(listView)
+
+        title=getString(R.string.modules)
     }
 
     private fun refreshList(){

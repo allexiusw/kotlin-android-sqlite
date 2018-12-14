@@ -15,4 +15,6 @@
     <string name="edit_modules">Edit Modules</string>
     <string name="add_assignment">Add Assignment</string>
     <string name="edit_assignment">Edit Assignment</string>
+    <string name="deadlines">Deadlines</string>
+    <string name="modules">Modules</string>
 </resources>
