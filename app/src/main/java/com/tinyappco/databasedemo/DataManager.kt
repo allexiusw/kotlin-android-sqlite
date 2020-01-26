@@ -185,7 +185,7 @@ class DataManager(context: Context) {
         for (assignment in moduleAssignments) {
             delete(assignment)
         }
-        db.delete("Modules", "Code = ?", arrayOf(module.code.toString()))
+        db.delete("Modules", "Code = ?", arrayOf(module.code))
     }
     //endregion
 

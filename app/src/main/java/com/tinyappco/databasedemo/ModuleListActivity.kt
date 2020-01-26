@@ -1,7 +1,7 @@
 package com.tinyappco.databasedemo
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ContextMenu
 import android.view.MenuItem
@@ -47,9 +47,9 @@ class ModuleListActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_modules_context,menu)
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
+    override fun onContextItemSelected(item: MenuItem): Boolean {
 
-        if (item?.itemId == R.id.menu_module_delete){
+        if (item.itemId == R.id.menu_module_delete){
 
             val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
             val module = modules[info.position]
