@@ -48,9 +48,11 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_deadlines_context, menu)
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
 
-        if (item?.itemId == R.id.menu_edit){
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+
+        if (item.itemId == R.id.menu_edit){
             val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
             val componentToEdit = dataSet[info.position]
 
@@ -61,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             return true
         }
 
-        if (item?.itemId == R.id.menu_delete){
+        if (item.itemId == R.id.menu_delete){
 
             val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
             val component = dataSet[info.position]
